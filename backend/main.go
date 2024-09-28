@@ -8,9 +8,9 @@ import (
 )
 
 type Todo struct {
-    ID int `json:"id"`
-    Completed bool `json:"completed"`
-    Body string `json:"body"`
+    ID        int    `json:"id"`
+    Completed bool   `json:"completed"`
+    Body      string `json:"body"`
 }
 
 func main() {
@@ -19,8 +19,9 @@ func main() {
 
     todos := []Todo{}
 
-    app.Get("/", func(c *fiber.Ctx) error {
-        return c.Status(200).JSON(fiber.Map{"data": "Hello World"})
+    // Read all todos
+    app.Get("/api/todos", func(c *fiber.Ctx) error {
+        return c.Status(200).JSON(todos)
     })
 
     // Create a todo
@@ -32,7 +33,7 @@ func main() {
         }
 
         if len(todo.Body) > 0 && todo.Body == "" {
-            return c.Status(400).JSON(fiber.Map{"error":"Todo body is required"})
+            return c.Status(400).JSON(fiber.Map{"error": "Todo body is required"})
         }
 
         todo.ID = len(todos) + 1
@@ -53,6 +54,8 @@ func main() {
         }
         return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
     })
+
+    // TODO: Delete a Todo
 
     log.Fatal(app.Listen(":4000"))
 }
