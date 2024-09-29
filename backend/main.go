@@ -123,10 +123,24 @@ func updateTodos(c *fiber.Ctx) error {
         return err
     }
 
-    return c.Status(200).JSON(fiber.Map{"sucess": true})
+    return c.Status(200).JSON(fiber.Map{"success": true})
 }
 
 // TODO : Delete a todo by id
 func deleteTodos(c *fiber.Ctx) error {
-    return nil
+    id := c.Params("id")
+    objectID, err := primitive.ObjectIDFromHex(id)
+
+    if err != nil {
+        return c.Status(404).JSON(fiber.Map{"error": "Invalid todo ID"})
+    }
+
+    filter := bson.M{"_id": objectID}
+    _, err = collection.DeleteOne(context.Background(), filter)
+
+    if err != nil {
+        return err
+    }
+
+    return c.Status(200).JSON(fiber.Map{"success": true})
 }
