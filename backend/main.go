@@ -15,7 +15,7 @@ import (
 )
 
 type Todo struct {
-    ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+    ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"` //omitempty to prevent 000...000 id
     Completed bool               `json:"completed"`
     Body      string             `json:"body"`
 }
@@ -28,6 +28,7 @@ func main() {
         log.Fatal("Error loading .env file:", err)
     }
 
+    // Connect to MongoDB
     MONGODB_URI := os.Getenv("MONGODB_URI")
     clientOptions := options.Client().ApplyURI(MONGODB_URI)
     client, err := mongo.Connect(context.Background(), clientOptions)
@@ -36,6 +37,7 @@ func main() {
         log.Fatal(err)
     }
 
+    // Disconnect when shutdown server
     defer client.Disconnect(context.Background())
 
     err = client.Ping(context.Background(), nil)
