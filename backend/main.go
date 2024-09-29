@@ -64,7 +64,7 @@ func main() {
     log.Fatal(app.Listen(":" + PORT))
 }
 
-// TODO : Get all Todos
+// TODO (DONE): Get all Todos
 func getTodos(c *fiber.Ctx) error {
     var todos []Todo
 
@@ -86,7 +86,7 @@ func getTodos(c *fiber.Ctx) error {
     return c.JSON(todos)
 }
 
-// TODO : Create a todo
+// TODO (DONE): Create a todo
 func createTodos(c *fiber.Ctx) error {
     todo := new(Todo)
 
@@ -108,7 +108,7 @@ func createTodos(c *fiber.Ctx) error {
     return c.Status(201).JSON(todo)
 }
 
-// TODO : Update a todo by id (Complete property)
+// TODO (DONE): Update a todo by id (Complete property)
 func updateTodos(c *fiber.Ctx) error {
     id := c.Params("id")
     ObjectID, err := primitive.ObjectIDFromHex(id)
@@ -128,7 +128,7 @@ func updateTodos(c *fiber.Ctx) error {
     return c.Status(200).JSON(fiber.Map{"success": true})
 }
 
-// TODO : Delete a todo by id
+// TODO (DONE): Delete a todo by id
 func deleteTodos(c *fiber.Ctx) error {
     id := c.Params("id")
     objectID, err := primitive.ObjectIDFromHex(id)
