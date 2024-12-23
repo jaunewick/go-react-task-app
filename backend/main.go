@@ -16,6 +16,7 @@ import (
 var collection *mongo.Collection
 
 func main() {
+    // Load .env file
     err := godotenv.Load()
     if err != nil {
         log.Fatal("Error loading .env file:", err)
@@ -32,6 +33,7 @@ func main() {
     // Disconnect when shutdown server
     defer client.Disconnect(context.Background())
 
+    // Ping the server
     err = client.Ping(context.Background(), nil)
     if err != nil {
         log.Fatal(err)
@@ -39,17 +41,21 @@ func main() {
 
     fmt.Println("Connected to MongoDB")
 
+    // Set collection to routes
     collection = client.Database("golang_db").Collection("todos")
     routes.SetCollection(collection)
 
+    // Create a new Fiber instance
     fmt.Println("Server is running...")
     app := fiber.New()
 
+    // Define routes
     app.Get("/api/todos", routes.GetTodos)
     app.Post("/api/todos", routes.CreateTodos)
     app.Patch("/api/todos/:id", routes.UpdateTodos)
     app.Delete("/api/todos/:id", routes.DeleteTodos)
 
+    // Listen on server
     PORT := os.Getenv("PORT")
     if PORT == "" {
         PORT = "4000"

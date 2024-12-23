@@ -9,14 +9,17 @@ import (
     "go.mongodb.org/mongo-driver/mongo"
 )
 
+// Define model
 type Todo struct {
     ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"` //omitempty to prevent 000...000 id
     Completed bool               `json:"completed"`
     Body      string             `json:"body"`
 }
 
+// Define collection
 var collection *mongo.Collection
 
+// Set collection from main.go
 func SetCollection(col *mongo.Collection) {
     collection = col
 }
@@ -29,6 +32,8 @@ func GetTodos(c *fiber.Ctx) error {
     if err != nil {
         return err
     }
+
+    // Close the cursor once finished to free up resources
     defer cursor.Close(context.Background())
 
     for cursor.Next(context.Background()) {
@@ -93,5 +98,3 @@ func DeleteTodos(c *fiber.Ctx) error {
 
     return c.Status(200).JSON(fiber.Map{"success": true})
 }
-
-
