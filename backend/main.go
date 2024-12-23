@@ -17,10 +17,12 @@ import (
 var collection *mongo.Collection
 
 func main() {
-    // Load .env file
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatal("Error loading .env file:", err)
+    // Load .env file in development
+    if os.Getenv("ENV") != "production" {
+        err := godotenv.Load()
+        if err != nil {
+            log.Fatal("Error loading .env file:", err)
+        }
     }
 
     // Connect to MongoDB
@@ -51,11 +53,11 @@ func main() {
     app := fiber.New()
 
     // CORS
-    app.Use(cors.New(cors.Config{
-        // Frontend URL
-        AllowOrigins: "http://localhost:5173",
-        AllowHeaders: "Origin, Content-Type, Accept",
-    }))
+    // app.Use(cors.New(cors.Config{
+    //     // Frontend URL
+    //     AllowOrigins: "http://localhost:5173",
+    //     AllowHeaders: "Origin, Content-Type, Accept",
+    // }))
 
     // Define routes
     app.Get("/api/todos", routes.GetTodos)
@@ -67,6 +69,10 @@ func main() {
     PORT := os.Getenv("PORT")
     if PORT == "" {
         PORT = "4000"
+    }
+
+    if os.Getenv("ENV") == "production" {
+        app.Static("/", "./frontend/dist")
     }
     log.Fatal(app.Listen(":" + PORT))
 }
