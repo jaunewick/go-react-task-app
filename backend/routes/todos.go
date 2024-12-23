@@ -73,12 +73,12 @@ func CreateTodos(c *fiber.Ctx) error {
 // Update a todo by id
 func UpdateTodos(c *fiber.Ctx) error {
     id := c.Params("id")
-    ObjectID, err := primitive.ObjectIDFromHex(id)
+    objectID, err := primitive.ObjectIDFromHex(id)
     if err != nil {
         return c.Status(404).JSON(fiber.Map{"error": "Invalid todo ID"})
     }
 
-    filter := bson.M{"_id": ObjectID}
+    filter := bson.M{"_id": objectID}
     update := bson.M{"$set": bson.M{"completed": true}}
     _, err = collection.UpdateOne(context.Background(), filter, update)
     if err != nil {
