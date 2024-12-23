@@ -1,3 +1,3 @@
 # go-react-task-app
 
-🚧🏗️👷 In the process of developing...
+![demo](.img/frontpage.png)
