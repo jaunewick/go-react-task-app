@@ -1,3 +1,3 @@
 # go-react-task-app
 
-![demo](.img/frontpage.png)
+![demo](.gif/demo.gif)
