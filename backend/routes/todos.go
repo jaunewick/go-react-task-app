@@ -1,12 +1,13 @@
 package routes
 
 import (
-    "context"
+	"context"
+	"strings"
 
-    "github.com/gofiber/fiber/v2"
-    "go.mongodb.org/mongo-driver/bson"
-    "go.mongodb.org/mongo-driver/bson/primitive"
-    "go.mongodb.org/mongo-driver/mongo"
+	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Define model
@@ -53,6 +54,11 @@ func CreateTodos(c *fiber.Ctx) error {
 
     if err := c.BodyParser(todo); err != nil {
         return err
+    }
+
+    // Validate body field is not empty
+    if strings.TrimSpace(todo.Body) == "" {
+        return c.Status(400).JSON(fiber.Map{"error": "Todo body cannot be empty"})
     }
 
     insertResult, err := collection.InsertOne(context.Background(), todo)
